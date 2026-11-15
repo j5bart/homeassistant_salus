@@ -53,7 +53,7 @@ CONF_POST_COMMAND_REFRESH_DELAY = "post_command_refresh_delay"
 MIN_POST_COMMAND_REFRESH_DELAY = 0.0
 MAX_POST_COMMAND_REFRESH_DELAY = 30.0
 
-# Allowed values for the MiniTRV report interval number, besides 0 (off).
+# Allowed values for the MiniTRV refresh interval number, besides 0 (off).
 # Requests are only sent during polls, so the poll interval is the real floor.
-MIN_MINI_TRV_REPORT_INTERVAL_MINUTES = 1
-MAX_MINI_TRV_REPORT_INTERVAL_MINUTES = 1440
+MIN_MINI_TRV_REFRESH_INTERVAL_MINUTES = 1
+MAX_MINI_TRV_REFRESH_INTERVAL_MINUTES = 1440

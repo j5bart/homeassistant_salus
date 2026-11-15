@@ -107,8 +107,8 @@
             }
         },
         "number": {
-            "mini_trv_report_interval": {
-                "name": "MiniTRV report interval"
+            "mini_trv_refresh_interval": {
+                "name": "MiniTRV refresh interval"
             }
         },
         "select": {

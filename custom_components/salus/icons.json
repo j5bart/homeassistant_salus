@@ -16,7 +16,7 @@
       }
     },
     "number": {
-      "mini_trv_report_interval": {
+      "mini_trv_refresh_interval": {
         "default": "mdi:timer-sync-outline"
       }
     },

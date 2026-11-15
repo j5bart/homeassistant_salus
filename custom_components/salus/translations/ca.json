@@ -107,8 +107,8 @@
             }
         },
         "number": {
-            "mini_trv_report_interval": {
-                "name": "Interval d'informes dels MiniTRV"
+            "mini_trv_refresh_interval": {
+                "name": "Interval d'actualització dels MiniTRV"
             }
         },
         "select": {

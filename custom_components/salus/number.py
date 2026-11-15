@@ -2,7 +2,7 @@
 
 Currently:
 
-- `SalusMiniTrvReportIntervalNumber`: gateway-wide it600MINITRV report request
+- `SalusMiniTrvRefreshIntervalNumber`: gateway-wide it600MINITRV refresh
   interval, added once the gateway reports a MiniTRV.
 
 Add further number entities to `async_setup_entry`, each with its own discovery.
@@ -23,8 +23,8 @@ from salus_it600.device_models import MODEL_MINI_TRV
 
 from .const import (
     DOMAIN,
-    MAX_MINI_TRV_REPORT_INTERVAL_MINUTES,
-    MIN_MINI_TRV_REPORT_INTERVAL_MINUTES,
+    MAX_MINI_TRV_REFRESH_INTERVAL_MINUTES,
+    MIN_MINI_TRV_REFRESH_INTERVAL_MINUTES,
 )
 from .coordinator import SalusConfigEntry, SalusData, SalusDataUpdateCoordinator
 
@@ -54,7 +54,7 @@ async def async_setup_entry(
     """Set up Salus number entities from a config entry."""
     coordinator = config_entry.runtime_data.coordinator
 
-    # MiniTRV report interval: one per gateway, once it reports a MiniTRV.
+    # MiniTRV refresh interval: one per gateway, once it reports a MiniTRV.
     added = False
 
     @callback
@@ -63,7 +63,7 @@ async def async_setup_entry(
         if added or not _has_mini_trv(coordinator.data):
             return
         added = True
-        async_add_entities([SalusMiniTrvReportIntervalNumber(coordinator)])
+        async_add_entities([SalusMiniTrvRefreshIntervalNumber(coordinator)])
 
     _async_add_when_mini_trv_present()
     config_entry.async_on_unload(
@@ -71,7 +71,7 @@ async def async_setup_entry(
     )
 
 
-class SalusMiniTrvReportIntervalNumber(RestoreNumber):
+class SalusMiniTrvRefreshIntervalNumber(RestoreNumber):
     """Minutes a MiniTRV can go without a report before one is requested; 0 is off.
 
     Off by default: the Salus app never requests reports on a schedule, and the
@@ -80,11 +80,11 @@ class SalusMiniTrvReportIntervalNumber(RestoreNumber):
     """
 
     _attr_has_entity_name = True
-    _attr_translation_key = "mini_trv_report_interval"
+    _attr_translation_key = "mini_trv_refresh_interval"
     _attr_entity_category = EntityCategory.CONFIG
     _attr_mode = NumberMode.BOX
     _attr_native_min_value = 0
-    _attr_native_max_value = MAX_MINI_TRV_REPORT_INTERVAL_MINUTES
+    _attr_native_max_value = MAX_MINI_TRV_REFRESH_INTERVAL_MINUTES
     _attr_native_step = 1
     _attr_native_unit_of_measurement = UnitOfTime.MINUTES
     _attr_should_poll = False
@@ -92,7 +92,7 @@ class SalusMiniTrvReportIntervalNumber(RestoreNumber):
     def __init__(self, coordinator: SalusDataUpdateCoordinator) -> None:
         """Initialize the entity on the gateway device from the client's value."""
         self._gateway = coordinator.gateway
-        self._attr_unique_id = f"{coordinator.gateway_id}_mini_trv_report_interval"
+        self._attr_unique_id = f"{coordinator.gateway_id}_mini_trv_refresh_interval"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, coordinator.gateway_id)}
         )
@@ -110,7 +110,7 @@ class SalusMiniTrvReportIntervalNumber(RestoreNumber):
         try:
             self._apply(last.native_value)
         except ServiceValidationError as ex:
-            _LOGGER.warning("Not restoring MiniTRV report interval: %s", ex)
+            _LOGGER.warning("Not restoring MiniTRV refresh interval: %s", ex)
 
     async def async_set_native_value(self, value: float) -> None:
         """Change the interval; the next gateway poll uses it."""
@@ -118,17 +118,17 @@ class SalusMiniTrvReportIntervalNumber(RestoreNumber):
         self.async_write_ha_state()
 
     def _apply(self, minutes: Any) -> None:
-        """Validate minutes and set the client's report request interval."""
+        """Validate minutes and set the client's MiniTRV refresh interval."""
         if not isinstance(minutes, (int, float)) or not (
             minutes == 0
-            or MIN_MINI_TRV_REPORT_INTERVAL_MINUTES
+            or MIN_MINI_TRV_REFRESH_INTERVAL_MINUTES
             <= minutes
-            <= MAX_MINI_TRV_REPORT_INTERVAL_MINUTES
+            <= MAX_MINI_TRV_REFRESH_INTERVAL_MINUTES
         ):
             raise ServiceValidationError(
-                "MiniTRV report interval must be 0 (off) or "
-                f"{MIN_MINI_TRV_REPORT_INTERVAL_MINUTES}-"
-                f"{MAX_MINI_TRV_REPORT_INTERVAL_MINUTES} minutes, got {minutes}"
+                "MiniTRV refresh interval must be 0 (off) or "
+                f"{MIN_MINI_TRV_REFRESH_INTERVAL_MINUTES}-"
+                f"{MAX_MINI_TRV_REFRESH_INTERVAL_MINUTES} minutes, got {minutes}"
             )
         self._gateway.mini_trv_request_report_after = (
             minutes * 60 if minutes else None
