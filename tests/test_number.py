@@ -174,6 +174,17 @@ class TestSalusMiniTrvReportIntervalNumberCommands:
         assert entity.native_value == 60
 
 
+def _stored_report_interval(minutes: float | None) -> NumberExtraStoredData:
+    """Return the restore data Home Assistant keeps for the report interval."""
+    return NumberExtraStoredData(
+        native_max_value=1440,
+        native_min_value=0,
+        native_step=1,
+        native_unit_of_measurement="min",
+        native_value=minutes,
+    )
+
+
 class TestSalusMiniTrvReportIntervalNumberRestore:
     """Test the interval is restored into the client after a restart."""
 
@@ -181,11 +192,11 @@ class TestSalusMiniTrvReportIntervalNumberRestore:
         ("restored", "expected_value", "expected_seconds"),
         [
             (None, 0, None),
-            (NumberExtraStoredData(native_value=None, native_unit_of_measurement="min"), 0, None),
-            (NumberExtraStoredData(native_value=120.0, native_unit_of_measurement="min"), 120.0, 7200.0),
-            (NumberExtraStoredData(native_value=0.0, native_unit_of_measurement="min"), 0.0, None),
+            (_stored_report_interval(None), 0, None),
+            (_stored_report_interval(120.0), 120.0, 7200.0),
+            (_stored_report_interval(0.0), 0.0, None),
             # Outside the allowed range: stays off rather than waking TRVs often.
-            (NumberExtraStoredData(native_value=0.5, native_unit_of_measurement="min"), 0, None),
+            (_stored_report_interval(0.5), 0, None),
         ],
     )
     async def test_restores_the_last_value_into_the_client(
