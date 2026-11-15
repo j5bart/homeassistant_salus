@@ -15,6 +15,11 @@
         }
       }
     },
+    "number": {
+      "mini_trv_report_interval": {
+        "default": "mdi:timer-sync-outline"
+      }
+    },
     "select": {
       "trv_mode": {
         "default": "mdi:radiator",

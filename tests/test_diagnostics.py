@@ -156,6 +156,7 @@ async def test_diagnostics_redacts_token_and_reports_health(hass: HomeAssistant)
     assert diagnostics["runtime"]["loaded"] is True
     assert diagnostics["device_counts"]["climate"] == 2
     assert diagnostics["gateway"]["health"]["successful_updates"] == 1
+    assert diagnostics["gateway"]["mini_trv_request_report_after"] is None
     assert diagnostics["climate"]["devices"]["sq610-1"]["support_fields"][
         "LockKey"
     ] == 1

@@ -25,7 +25,7 @@ entities from normalized `salus-it600-client` models whenever possible.
 | Thermostat humidity fields | Humidity sensor | Exposed when the thermostat reports humidity through normalized client fields. |
 | Thermostat floor probe fields | Floor temperature sensor | Exposed when the thermostat reports an external floor probe value. |
 | Smart plug metering fields | Power and energy sensors | Exposed for supported plug and relay devices that report metering data. |
-| TRV10RFM (reported by the gateway as `it600MINITRV`) | Temperature sensor, RSSI and LQI sensors | The temperature is a cached reading decoded from the last report the TRV sent (`CommandResponse_d`), kept until a new report arrives. Reports can be irregular, with gaps of several hours seen on real hardware, so Home Assistant polling does not guarantee a fresh value; sending a command (e.g. changing mode) usually triggers a new report. Optional regular reporting may be implemented later to improve value freshness, potentially at some cost to battery life. |
+| TRV10RFM (reported by the gateway as `it600MINITRV`) | Temperature sensor, RSSI and LQI sensors | The temperature is a cached reading decoded from the last report the TRV sent (`CommandResponse_d`), kept until a new report arrives. Reports can be irregular, with gaps of several hours seen on real hardware, so Home Assistant polling does not guarantee a fresh value; sending a command (e.g. changing mode) usually triggers a new report. The gateway's **MiniTRV report interval** number can ask each TRV for a report when it has gone longer than the set number of minutes without one. It is off (0) by default because its effect on battery life has not been measured. |
 
 ## Binary Sensors
 
@@ -56,6 +56,12 @@ entities from normalized `salus-it600-client` models whenever possible.
 | Device | Home Assistant entities | Control support | Notes |
 |---|---|---|---|
 | TRV10RFM (reported by the gateway as `it600MINITRV`) | Mode `select` | Auto, Manual on (valve open), Manual off (valve closed) | Shows as unknown while the TRV reports a mode it entered on its own. |
+
+## Numbers
+
+| Device | Home Assistant entities | Control support | Notes |
+|---|---|---|---|
+| Gateway, when it has at least one TRV10RFM (`it600MINITRV`) | MiniTRV report interval `number` (configuration) | 0 (off, default) or 1-1440 minutes | Applies to every MiniTRV on the gateway. Each TRV that has gone longer than this without a report is asked for one during a regular poll, so the poll interval is the shortest effective value; the new reading appears a poll later. Kept across restarts and can be changed from automations. The effect on battery life has not been measured, so prefer longer intervals; very short ones also make it more likely that a request overwrites a command just sent from the Salus app. |
 
 ## Known Unsupported Or Limited Devices
 

@@ -100,6 +100,9 @@ async def async_get_config_entry_diagnostics(
                     "id": coordinator.gateway_id,
                     "host": getattr(entry, "data", {}).get(CONF_HOST),
                     "health": coordinator.gateway_diagnostics(),
+                    "mini_trv_request_report_after": getattr(
+                        runtime_data.gateway, "mini_trv_request_report_after", None
+                    ),
                 },
                 TO_REDACT,
             ),

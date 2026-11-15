@@ -47,7 +47,7 @@ cooling, schedules, and hold states:
 | **Temperature calibration** | SQ610 temperature offset from the thermostat's Advanced Settings (°C, diagnostic, read-only) |
 
 > [!NOTE]
-> The TRV10RFM (`it600MINITRV`) temperature is a cached reading: the integration keeps the last value the TRV reported until it sends a new one. The TRV reports irregularly, and gaps of 4 to 8 hours have been seen on real hardware, so the regular Home Assistant poll does not guarantee a fresh TRV temperature. Sending a command to the TRV (for example changing its mode) usually triggers a new report. See [supported devices](docs/supported-devices.md) for details.
+> The TRV10RFM (`it600MINITRV`) temperature is a cached reading: the integration keeps the last value the TRV reported until it sends a new one. The TRV reports irregularly, and gaps of 4 to 8 hours have been seen on real hardware, so the regular Home Assistant poll does not guarantee a fresh TRV temperature. Sending a command to the TRV (for example changing its mode) usually triggers a new report. The gateway's **MiniTRV report interval** setting can also ask for reports regularly (see [Numbers](#numbers)). See [supported devices](docs/supported-devices.md) for details.
 
 ### Binary sensors
 
@@ -81,6 +81,12 @@ One lock entity per thermostat that supports child lock. Allows **locking/unlock
 | Select | Description |
 |---|---|
 | **Mode** | it600MINITRV mode: **Auto** (follow the paired thermostat), **Manual on (open)**, or **Manual off (closed)**. Shows as unknown while the TRV reports a mode it entered on its own |
+
+### Numbers
+
+| Number | Description |
+|---|---|
+| **MiniTRV report interval** | Gateway setting: ask each it600MINITRV for a fresh report after this many minutes without one (1-1440). **0** (default) is off, because the effect on TRV battery life has not been measured; longer intervals are gentler |
 
 ## Installation
 
@@ -151,6 +157,7 @@ For detailed support status, entity coverage, and known limitations, see
 | **Covers** | RS600 |
 | **Locks** | Any thermostat with child-lock support |
 | **Selects** | TRV10RFM / it600MINITRV (mode) |
+| **Numbers** | Gateway with a TRV10RFM / it600MINITRV (report interval) |
 
 Known unsupported: SB600, CSB600 (button actions only work through the Salus Smart Home app).
 

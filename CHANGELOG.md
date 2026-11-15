@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+- it600MINITRV: add a **MiniTRV report interval** number on the gateway
+  device (configuration; 0 = off, the default, or 1-1440 minutes). When set,
+  the integration asks each online TRV for a status report when it has gone
+  longer than that without sending one, which keeps the cached TRV
+  temperature fresher at an unmeasured cost to TRV battery life. The value is
+  kept across restarts and can be changed at runtime, including from
+  automations, without reloading the integration.
+- Diagnostics include the current MiniTRV report request interval.
+- Requires a `salus-it600-client` release with the runtime
+  `IT600Gateway.mini_trv_request_report_after` setting.
+
 ## 0.9.12 - 2026-11-08
 
 - Promote 0.9.12b1 to stable and require stable client 0.8.0.

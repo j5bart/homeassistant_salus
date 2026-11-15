@@ -14,6 +14,7 @@ PLATFORMS: tuple[Platform, ...] = (
     Platform.SENSOR,
     Platform.LOCK,
     Platform.SELECT,
+    Platform.NUMBER,
 )
 
 CONF_SCAN_INTERVAL = "scan_interval"
@@ -51,3 +52,8 @@ MAX_POLL_FAILURE_THRESHOLD = 50
 CONF_POST_COMMAND_REFRESH_DELAY = "post_command_refresh_delay"
 MIN_POST_COMMAND_REFRESH_DELAY = 0.0
 MAX_POST_COMMAND_REFRESH_DELAY = 30.0
+
+# Allowed values for the MiniTRV report interval number, besides 0 (off).
+# Requests are only sent during polls, so the poll interval is the real floor.
+MIN_MINI_TRV_REPORT_INTERVAL_MINUTES = 1
+MAX_MINI_TRV_REPORT_INTERVAL_MINUTES = 1440
